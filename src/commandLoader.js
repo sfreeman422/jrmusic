@@ -1,0 +1,26 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const { Collection } = require('discord.js');
+
+/**
+ * Load all commands from the commands directory.
+ * @returns {Collection<string, object>}
+ */
+function loadCommands() {
+  const commands = new Collection();
+  const commandsPath = path.join(__dirname, 'commands');
+  const files = fs.readdirSync(commandsPath).filter((f) => f.endsWith('.js'));
+
+  for (const file of files) {
+    const command = require(path.join(commandsPath, file));
+    if (command.data && command.execute) {
+      commands.set(command.data.name, command);
+    }
+  }
+
+  return commands;
+}
+
+module.exports = { loadCommands };
