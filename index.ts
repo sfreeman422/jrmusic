@@ -1,10 +1,7 @@
-'use strict';
-
-require('dotenv').config();
-
-const { Client, GatewayIntentBits, Events } = require('discord.js');
-const { loadCommands } = require('./src/commandLoader');
-const { errorEmbed } = require('./src/utils/embeds');
+import 'dotenv/config';
+import { Client, GatewayIntentBits, Events } from 'discord.js';
+import { loadCommands } from './src/commandLoader';
+import { errorEmbed } from './src/utils/embeds';
 
 const client = new Client({
   intents: [
@@ -32,19 +29,21 @@ client.on(Events.InteractionCreate, async (interaction) => {
     console.error(`[InteractionCreate] Error executing /${interaction.commandName}:`, err);
     const reply = { embeds: [errorEmbed('An unexpected error occurred.')], ephemeral: true };
     if (interaction.replied || interaction.deferred) {
-      await interaction.editReply(reply).catch(() => {});
+      await interaction.editReply(reply).catch(() => undefined);
     } else {
-      await interaction.reply(reply).catch(() => {});
+      await interaction.reply(reply).catch(() => undefined);
     }
   }
 });
 
-const token = process.env.DISCORD_TOKEN;
+const token = process.env['DISCORD_TOKEN'];
 if (!token) {
-  console.error('DISCORD_TOKEN environment variable is not set. See README.md for setup instructions.');
+  console.error(
+    'DISCORD_TOKEN environment variable is not set. See README.md for setup instructions.',
+  );
   process.exit(1);
 }
 
-client.login(token);
+void client.login(token);
 
-module.exports = client; // exported for testing
+export default client;

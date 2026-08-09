@@ -1,16 +1,11 @@
-'use strict';
-
-const { EmbedBuilder } = require('discord.js');
+import { EmbedBuilder } from 'discord.js';
+import { Track } from '../MusicQueue';
 
 /** Accent colour used across all embeds. */
 const COLOR = 0x1db954; // Spotify green – looks good universally
 
-/**
- * Build a "Now Playing" embed.
- * @param {import('../MusicQueue').Track} track
- * @returns {EmbedBuilder}
- */
-function nowPlayingEmbed(track) {
+/** Build a "Now Playing" embed. */
+export function nowPlayingEmbed(track: Track): EmbedBuilder {
   const embed = new EmbedBuilder()
     .setColor(COLOR)
     .setTitle('🎵 Now Playing')
@@ -23,27 +18,20 @@ function nowPlayingEmbed(track) {
   return embed;
 }
 
-/**
- * Build a "Added to Queue" embed.
- * @param {import('../MusicQueue').Track} track
- * @param {number} position - 1-based position in queue
- * @returns {EmbedBuilder}
- */
-function queuedEmbed(track, position) {
+/** Build a "Added to Queue" embed. */
+export function queuedEmbed(track: Track, position: number): EmbedBuilder {
   return new EmbedBuilder()
     .setColor(COLOR)
     .setTitle('✅ Added to Queue')
     .setDescription(`${track.toString()}\n**Position:** ${position}`);
 }
 
-/**
- * Build a paginated queue embed.
- * @param {import('../MusicQueue').Track[]} tracks
- * @param {import('../MusicQueue').Track|null} nowPlaying
- * @param {number} page - 1-based page number
- * @returns {EmbedBuilder}
- */
-function queueListEmbed(tracks, nowPlaying, page = 1) {
+/** Build a paginated queue embed. */
+export function queueListEmbed(
+  tracks: Track[],
+  nowPlaying: Track | null,
+  page = 1,
+): EmbedBuilder {
   const PAGE_SIZE = 10;
   const start = (page - 1) * PAGE_SIZE;
   const slice = tracks.slice(start, start + PAGE_SIZE);
@@ -65,22 +53,12 @@ function queueListEmbed(tracks, nowPlaying, page = 1) {
     .setFooter({ text: `Page ${page}/${totalPages} • ${tracks.length} track(s) in queue` });
 }
 
-/**
- * Build a simple info embed.
- * @param {string} message
- * @returns {EmbedBuilder}
- */
-function infoEmbed(message) {
+/** Build a simple info embed. */
+export function infoEmbed(message: string): EmbedBuilder {
   return new EmbedBuilder().setColor(COLOR).setDescription(message);
 }
 
-/**
- * Build an error embed.
- * @param {string} message
- * @returns {EmbedBuilder}
- */
-function errorEmbed(message) {
+/** Build an error embed. */
+export function errorEmbed(message: string): EmbedBuilder {
   return new EmbedBuilder().setColor(0xe74c3c).setDescription(`❌ ${message}`);
 }
-
-module.exports = { nowPlayingEmbed, queuedEmbed, queueListEmbed, infoEmbed, errorEmbed };

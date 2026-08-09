@@ -1,9 +1,7 @@
-'use strict';
+import assert from 'assert';
+import { Track, MusicQueue } from '../src/MusicQueue';
 
-const assert = require('assert');
-const { Track, MusicQueue } = require('../src/MusicQueue');
-
-function makeTrack(title = 'Test Track') {
+function makeTrack(title = 'Test Track'): Track {
   return new Track({ url: 'https://example.com', title, duration: '3:00', requester: 'user#0001' });
 }
 
@@ -23,9 +21,9 @@ function makeTrack(title = 'Test Track') {
   q.enqueue(makeTrack('A'));
   q.enqueue(makeTrack('B'));
   assert.strictEqual(q.size, 2);
-  assert.strictEqual(q.peek().title, 'A');
+  assert.strictEqual(q.peek()?.title, 'A');
   const next = q.dequeue();
-  assert.strictEqual(next.title, 'A');
+  assert.strictEqual(next?.title, 'A');
   assert.strictEqual(q.size, 1);
   console.log('✅ MusicQueue: enqueue / dequeue / peek');
 }
@@ -48,9 +46,9 @@ function makeTrack(title = 'Test Track') {
   q.enqueue(makeTrack('B'));
   q.enqueue(makeTrack('C'));
   const removed = q.removeAt(2);
-  assert.strictEqual(removed.title, 'B');
+  assert.strictEqual(removed?.title, 'B');
   assert.strictEqual(q.size, 2);
-  assert.strictEqual(q.tracks[1].title, 'C');
+  assert.strictEqual(q.tracks[1]?.title, 'C');
   assert.strictEqual(q.removeAt(99), null);
   console.log('✅ MusicQueue: removeAt');
 }
@@ -62,10 +60,9 @@ function makeTrack(title = 'Test Track') {
   q.enqueue(makeTrack('A'));
   q.enqueue(makeTrack('B'));
   const first = q.dequeue();
-  assert.strictEqual(first.title, 'A');
-  // A should have been re-appended
+  assert.strictEqual(first?.title, 'A');
   assert.strictEqual(q.size, 2);
-  assert.strictEqual(q.tracks[1].title, 'A');
+  assert.strictEqual(q.tracks[1]?.title, 'A');
   console.log('✅ MusicQueue: loop mode re-enqueues track');
 }
 
@@ -75,8 +72,7 @@ function makeTrack(title = 'Test Track') {
   ['A', 'B', 'C', 'D', 'E'].forEach((t) => q.enqueue(makeTrack(t)));
   q.shuffle();
   assert.strictEqual(q.size, 5);
-  // After shuffle the first track is still 'A' (the originally-next track)
-  assert.strictEqual(q.tracks[0].title, 'A');
+  assert.strictEqual(q.tracks[0]?.title, 'A');
   console.log('✅ MusicQueue: shuffle preserves first track');
 }
 

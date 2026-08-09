@@ -1,6 +1,6 @@
 # jrmusic
 
-A self-hosted Discord music bot that streams audio from **YouTube**, **Spotify**, and other popular sources — similar to [Jockie Music](https://www.jockiemusic.com/).
+A self-hosted Discord music bot written in **TypeScript** that streams audio from **YouTube**, **Spotify**, and other popular sources — similar to [Jockie Music](https://www.jockiemusic.com/).
 
 ## Features
 
@@ -31,8 +31,6 @@ A self-hosted Discord music bot that streams audio from **YouTube**, **Spotify**
 - A Discord bot application — create one at the [Discord Developer Portal](https://discord.com/developers/applications)
 - *(Optional)* Spotify API credentials from the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
 
-## Setup
-
 1. **Clone and install dependencies**
 
    ```bash
@@ -57,7 +55,15 @@ A self-hosted Discord music bot that streams audio from **YouTube**, **Spotify**
    | `SPOTIFY_CLIENT_ID` | ❌ | Spotify app client ID |
    | `SPOTIFY_CLIENT_SECRET` | ❌ | Spotify app client secret |
 
-3. **Register slash commands**
+3. **Build the TypeScript source**
+
+   ```bash
+   npm run build
+   ```
+
+   Compiled output is written to `dist/`. This step is run automatically by `npm start` and `npm run deploy`.
+
+4. **Register slash commands**
 
    ```bash
    npm run deploy
@@ -92,31 +98,34 @@ Use the **OAuth2 URL Generator** in the Developer Portal with the `bot` and `app
 ## Architecture
 
 ```
-index.js              – Discord client, event routing
-deploy-commands.js    – One-time slash command registration
+index.ts              – Discord client, event routing
+deploy-commands.ts    – One-time slash command registration
 src/
-  MusicQueue.js       – Track model + queue management (loop, shuffle, remove)
-  Player.js           – Voice connection + audio playback per guild
-  PlayerManager.js    – Guild → Player map (create / get / destroy)
-  commandLoader.js    – Dynamically loads all files in src/commands/
+  MusicQueue.ts       – Track model + queue management (loop, shuffle, remove)
+  Player.ts           – Voice connection + audio playback per guild
+  PlayerManager.ts    – Guild → Player map (create / get / destroy)
+  commandLoader.ts    – Dynamically loads all files in src/commands/
+  types.ts            – Shared TypeScript interfaces (Command)
   commands/
-    play.js           – /play  (YouTube, Spotify, search)
-    skip.js           – /skip
-    stop.js           – /stop
-    pause.js          – /pause
-    resume.js         – /resume
-    nowplaying.js     – /nowplaying
-    queue.js          – /queue
-    remove.js         – /remove
-    shuffle.js        – /shuffle
-    loop.js           – /loop
-    volume.js         – /volume
-    clear.js          – /clear
+    play.ts           – /play  (YouTube, Spotify, search)
+    skip.ts           – /skip
+    stop.ts           – /stop
+    pause.ts          – /pause
+    resume.ts         – /resume
+    nowplaying.ts     – /nowplaying
+    queue.ts          – /queue
+    remove.ts         – /remove
+    shuffle.ts        – /shuffle
+    loop.ts           – /loop
+    volume.ts         – /volume
+    clear.ts          – /clear
   utils/
-    youtube.js        – YouTube resolution via play-dl
-    spotify.js        – Spotify → YouTube resolution via play-dl + Spotify API
-    embeds.js         – Reusable Discord embed builders
+    youtube.ts        – YouTube resolution via play-dl
+    spotify.ts        – Spotify → YouTube resolution via play-dl + Spotify API
+    embeds.ts         – Reusable Discord embed builders
+    formatDuration.ts – Shared duration formatter
 tests/
-  MusicQueue.test.js  – Unit tests for queue logic
-  embeds.test.js      – Unit tests for embed builders
+  MusicQueue.test.ts  – Unit tests for queue logic
+  embeds.test.ts      – Unit tests for embed builders
+dist/                 – Compiled JavaScript output (git-ignored)
 ```

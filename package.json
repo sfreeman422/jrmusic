@@ -2,11 +2,14 @@
   "name": "jrmusic",
   "version": "1.0.0",
   "description": "A Discord music bot that streams audio from YouTube, Spotify, and other sources.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node index.js",
-    "deploy": "node deploy-commands.js",
-    "test": "node tests/MusicQueue.test.js && node tests/embeds.test.js"
+    "build": "tsc",
+    "start": "npm run build && node dist/index.js",
+    "deploy": "npm run build && node dist/deploy-commands.js",
+    "test": "node dist/tests/MusicQueue.test.js && node dist/tests/embeds.test.js",
+    "pretest": "tsc",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",

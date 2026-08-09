@@ -1,21 +1,19 @@
-'use strict';
-
 /**
- * deploy-commands.js
+ * deploy-commands.ts
  *
  * Register slash commands with the Discord API.
  * Run once (or whenever commands change):
- *   node deploy-commands.js
+ *   npm run deploy
  */
 
-require('dotenv').config();
+import 'dotenv/config';
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord.js';
+import { loadCommands } from './src/commandLoader';
 
-const { REST, Routes } = require('@discordjs/rest');
-const { loadCommands } = require('./src/commandLoader');
-
-const token = process.env.DISCORD_TOKEN;
-const clientId = process.env.DISCORD_CLIENT_ID;
-const guildId = process.env.DISCORD_GUILD_ID; // optional – leave blank for global registration
+const token = process.env['DISCORD_TOKEN'];
+const clientId = process.env['DISCORD_CLIENT_ID'];
+const guildId = process.env['DISCORD_GUILD_ID'];
 
 if (!token || !clientId) {
   console.error('DISCORD_TOKEN and DISCORD_CLIENT_ID must be set in your .env file.');
